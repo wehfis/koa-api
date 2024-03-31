@@ -13,7 +13,9 @@ router.swagger({
 
 router.post('/register', UserController.registerUser);
 router.post('/login', UserController.loginUser);
+router.post('/logout', jwt_middleware(), UserController.logoutUser);
 router.get('/me', jwt_middleware(), UserController.getUser);
+router.get('/refresh', UserController.refreshToken);
 
 router.mapDir(path.resolve(__dirname, '../controllers'));
 
