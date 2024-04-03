@@ -8,6 +8,7 @@ import {
 export interface IBoardTaskModel {
     id: string;
     category_id: string;
+    board_id: string;
     title: string;
     description?: string;
 }
@@ -18,6 +19,9 @@ export class BoardTaskModel implements IBoardTaskModel {
 
     @IsNotEmpty()
     category_id: string;
+    
+    @IsNotEmpty()
+    board_id: string;
 
     @IsNotEmpty()
     @Length(2, 50)
@@ -31,6 +35,7 @@ export class BoardTaskModel implements IBoardTaskModel {
     constructor(payload: IBoardTaskModel) {
         this.id = payload.id;
         this.category_id = payload.category_id;
+        this.board_id = payload.board_id;
         this.title = payload.title;
         this.description = payload.description;
     }
