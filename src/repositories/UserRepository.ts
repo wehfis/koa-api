@@ -68,4 +68,42 @@ export default class UserRepository implements IUserRepository {
 
         return result.rows.length > 0 ? result.rows[0] : null;
     }
+
+    async updateToken(id: string, token: string) {
+        const query = {
+            text: `
+                UPDATE users 
+                SET refresh_token = $1
+                WHERE id = $2
+            `,
+            values: [token, id],
+        };
+        await db.query(query);
+    }
+
+    async removeToken(id: string) {
+        const query = {
+            text: `
+                UPDATE users 
+                SET refresh_token = NULL
+                WHERE id = $1
+            `,
+            values: [id],
+        };
+        await db.query(query);
+    }
+
+    async findToken(token: string): Promise<string | null> {
+        const query = {
+            text: `
+                SELECT refresh_token 
+                FROM users
+                WHERE refresh_token = $1
+            `,
+            values: [token],
+        };
+        const result = await db.query(query);
+
+        return result.rows.length > 0 ? result.rows[0] : null;
+    }
 }
