@@ -1,7 +1,6 @@
 import {
     IsNotEmpty,
     IsString,
-    IsEmail,
     Length,
 } from 'class-validator';
 import bcrypt from 'bcrypt';

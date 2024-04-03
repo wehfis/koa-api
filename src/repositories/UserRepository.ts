@@ -1,9 +1,15 @@
 import { UserModel } from '../models/UserModel';
 import IUserRepository from './IUserRepository';
 import { db } from '../db/postgres_config';
-import { LoginUserDto, RegisterUserDto } from '../dtos/UserDtos';
+import { RegisterUserDto } from '../dtos/UserDtos';
 
 export default class UserRepository implements IUserRepository {
+    update(id: string, payload: unknown): Promise<Omit<UserModel, 'password'>> {
+        throw new Error('Method not implemented.');
+    }
+    delete(id: string): Promise<boolean> {
+        throw new Error('Method not implemented.');
+    }
     async findById(id: string): Promise<Omit<UserModel, 'password'>> {
         const query = {
             text: `
