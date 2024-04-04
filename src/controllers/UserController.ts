@@ -1,14 +1,13 @@
 import { request, summary, tagsAll, body } from 'koa-swagger-decorator';
 import { RegisterUserDto, LoginUserDto, IUserDto } from '../dtos/UserDtos';
 import { DefaultContext, DefaultState, ParameterizedContext } from 'koa';
-import { userService } from '../factories/user_factory';
+import { services } from '../factories/service_factory';
 import { loginUserSchema, registerUserSchema } from './schemas/request_schemas';
 import { validateWrapper } from './validation/validate_wrapper';
-import common from '../config';
 
 @tagsAll(['User'])
 export default class UserController {
-    @request('post', '/register')
+    @request('post', '/user/register')
     @summary('creates a user')
     @body(registerUserSchema)
     static async registerUser(
@@ -22,7 +21,7 @@ export default class UserController {
         } catch (error: any) {
             return ctx.throw(400, error.message);
         }
-        const tokens = await userService.register(payload, ctx);
+        const tokens = await services.user.register(payload, ctx);
         ctx.cookies.set('refreshToken', tokens.refreshToken, {
             maxAge: 30 * 24 * 60 * 60 * 1000,
             httpOnly: true,
@@ -31,7 +30,7 @@ export default class UserController {
         ctx.response.message = 'User Registered Successfully';
         ctx.response.status = 201;
     }
-    @request('post', '/login')
+    @request('post', '/user/login')
     @summary('returns a jwt')
     @body(loginUserSchema)
     static async loginUser(
@@ -43,7 +42,7 @@ export default class UserController {
         } catch (error: any) {
             return ctx.throw(400, error.message);
         }
-        const tokens = await userService.login(payload, ctx);
+        const tokens = await services.user.login(payload, ctx);
         ctx.cookies.set('refreshToken', tokens.refreshToken, {
             maxAge: 30 * 24 * 60 * 60 * 1000,
             httpOnly: true,
@@ -51,30 +50,30 @@ export default class UserController {
         ctx.body = tokens.accessToken;
         ctx.response.status = 200;
     }
-    @request('post', '/logout')
+    @request('post', '/user/logout')
     @summary('returns a jwt')
     static async logoutUser(
         ctx: ParameterizedContext<DefaultState, DefaultContext>
     ): Promise<void> {
         ctx.cookies.set('refreshToken', null, { expires: new Date(0) });
-        await userService.logout(ctx.state.userId, ctx);
+        await services.user.logout(ctx.state.userId, ctx);
         ctx.response.status = 200;
     }
-    @request('get', '/me')
+    @request('get', '/user/me')
     @summary('returns a currently authorized user')
     static async getUser(
         ctx: ParameterizedContext<DefaultState, DefaultContext>
     ): Promise<void> {
-        ctx.body = await userService.getUserById(ctx.state.userId, ctx);
+        ctx.body = await services.user.getUserById(ctx.state.userId, ctx);
         ctx.response.status = 200;
     }
-    @request('get', '/refresh')
+    @request('get', '/user/refresh')
     @summary('returns a new access token')
     static async refreshToken(
         ctx: ParameterizedContext<DefaultState, DefaultContext>
     ): Promise<void> {
         const refreshToken = ctx.cookies.get('refreshToken');
-        const tokens = await userService.refresh(refreshToken, ctx);
+        const tokens = await services.user.refresh(refreshToken, ctx);
         ctx.cookies.set('refreshToken', tokens.refreshToken, {
             maxAge: 30 * 24 * 60 * 60 * 1000,
             httpOnly: true,

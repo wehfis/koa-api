@@ -15,6 +15,12 @@ export default class TaskRepository implements ITaskRepository<BoardTaskModel> {
         };
         const result = await db.query(query);
 
+        if (result.rows.length < 1) {
+            const notFoundError = new Error(`Task with id '${id}' not found`);
+            notFoundError.name = 'Not Found';
+            throw notFoundError;
+        }
+
         const task: BoardTaskModel = result.rows[0];
 
         return task;
@@ -35,8 +41,6 @@ export default class TaskRepository implements ITaskRepository<BoardTaskModel> {
         return tasks;
     }
     async create(
-        boardId: string,
-        categoryId: string,
         task: ITaskBoardDto
     ): Promise<BoardTaskModel> {
         const query = {
@@ -45,7 +49,7 @@ export default class TaskRepository implements ITaskRepository<BoardTaskModel> {
                 VALUES($1, $2, $3, $4)
                 RETURNING id, title, description, category_id, board_id
             `,
-            values: [boardId, categoryId, task.title, task.description],
+            values: [task.board_id, task.category_id, task.title, task.description],
         };
         const result = await db.query(query);
 
@@ -59,12 +63,19 @@ export default class TaskRepository implements ITaskRepository<BoardTaskModel> {
                 UPDATE board_categories
                 SET title = $1
                 SET description = $2
+                SET category_id = $3
                 WHERE id = $3
                 RETURNING id, title, description, category_id, board_id
             `,
-            values: [task.title, task.description, id],
+            values: [task.title, task.description, task.category_id, id],
         };
         const result = await db.query(query);
+
+        if (result.rows.length < 1) {
+            const notFoundError = new Error(`Task with id '${id}' not found`);
+            notFoundError.name = 'Not Found';
+            throw notFoundError;
+        }
 
         const updatedBoard: BoardTaskModel = result.rows[0];
 
@@ -80,8 +91,12 @@ export default class TaskRepository implements ITaskRepository<BoardTaskModel> {
         };
         const result = await db.query(query);
 
-        const isDeleted: boolean = result.rows.length > 1 ? false : true;
+        if (result.rows.length < 1) {
+            const notFoundError = new Error(`Task with id '${id}' not found`);
+            notFoundError.name = 'Not Found';
+            throw notFoundError;
+        }
 
-        return isDeleted;
+        return true;
     }
 }

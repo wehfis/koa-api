@@ -14,6 +14,12 @@ export default class BoardRepository implements IBoardRepository<BoardModel> {
         };
         const result = await db.query(query);
 
+        if (result.rows.length < 1) {
+            const notFoundError = new Error(`Board with id '${id}' not found`);
+            notFoundError.name = 'Not Found';
+            throw notFoundError;
+        }
+
         const board: BoardModel = result.rows[0];
 
         return board;
@@ -36,6 +42,7 @@ export default class BoardRepository implements IBoardRepository<BoardModel> {
         return boards;
     }
     async create(userId: string, title: string): Promise<BoardModel> {
+        console.log(title);
         const query1 = {
             text: `
                 INSERT INTO boards(title) 
@@ -47,7 +54,7 @@ export default class BoardRepository implements IBoardRepository<BoardModel> {
         const result = await db.query(query1);
 
         const insertedBoard: BoardModel = result.rows[0];
-
+        console.log(insertedBoard);
         const query2 = {
             text: `
                 INSERT INTO users_boards
@@ -69,9 +76,15 @@ export default class BoardRepository implements IBoardRepository<BoardModel> {
                 WHERE id = $2
                 RETURNING id, title
             `,
-            values: [title, id]
+            values: [title, id],
         };
         const result = await db.query(query);
+
+        if (result.rows.length < 1) {
+            const notFoundError = new Error(`Board with id '${id}' not found`);
+            notFoundError.name = 'Not Found';
+            throw notFoundError;
+        }
 
         const updatedBoard: BoardModel = result.rows[0];
 
@@ -86,9 +99,13 @@ export default class BoardRepository implements IBoardRepository<BoardModel> {
             values: [id],
         };
         const result = await db.query(query);
+        
+        if (result.rows.length < 1) {
+            const notFoundError = new Error(`Board with id '${id}' not found`);
+            notFoundError.name = 'Not Found';
+            throw notFoundError;
+        }
 
-        const isDeleted: boolean = result.rows.length > 1 ? false : true;
-
-        return isDeleted;
+        return true;
     }
 }

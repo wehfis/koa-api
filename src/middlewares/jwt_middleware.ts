@@ -16,7 +16,8 @@ export default () =>
             const decoded: any = jwt.verify(token, common.jwtSecretAccessKey!);
             ctx.state.userId = decoded.userId;
             await next();
-        } catch (error) {
+        } catch (error: any) {
+            console.log(error.message);
             return ctx.throw(401, 'Invalid token');
         }
     };
