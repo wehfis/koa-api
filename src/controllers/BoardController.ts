@@ -9,7 +9,7 @@ import {
 
 @tagsAll(['Board'])
 export default class BoardController {
-    @request('post', '/board/create')
+    @request('post', '/board')
     @summary('creates a board')
     @body(createBoardSchema)
     static async createBoard(
@@ -27,7 +27,7 @@ export default class BoardController {
         ctx.response.message = 'Board Created Successfully';
         ctx.response.status = 201;
     }
-    @request('get', '/board/getAll')
+    @request('get', '/boards')
     @summary('returns a specific user boards')
     static async getBoards(
         ctx: ParameterizedContext<DefaultState, DefaultContext>
@@ -48,7 +48,7 @@ export default class BoardController {
         ctx.body = board;
         ctx.response.status = 200;
     }
-    @request('put', '/board/update/{id}')
+    @request('put', '/board/{id}')
     @path(boardSchemaId)
     @body(updateBoardSchema)
     @summary('returns a board')
@@ -65,7 +65,7 @@ export default class BoardController {
         ctx.body = board;
         ctx.response.status = 200;
     }
-    @request('delete', '/board/delete/{id}')
+    @request('delete', '/board/{id}')
     @path(boardSchemaId)
     @summary('returns an operation')
     static async deleteBoard(

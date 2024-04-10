@@ -26,7 +26,7 @@ export default class UserController {
             maxAge: 30 * 24 * 60 * 60 * 1000,
             httpOnly: true,
         });
-        ctx.body = tokens.accessToken;
+        ctx.body = tokens;
         ctx.response.message = 'User Registered Successfully';
         ctx.response.status = 201;
     }
@@ -47,7 +47,7 @@ export default class UserController {
             maxAge: 30 * 24 * 60 * 60 * 1000,
             httpOnly: true,
         });
-        ctx.body = tokens.accessToken;
+        ctx.body = tokens;
         ctx.response.status = 200;
     }
     @request('post', '/user/logout')
@@ -78,7 +78,7 @@ export default class UserController {
             maxAge: 30 * 24 * 60 * 60 * 1000,
             httpOnly: true,
         });
-        ctx.body = tokens.accessToken;
+        ctx.body = tokens;
         ctx.response.status = 200;
     }
 }

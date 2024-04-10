@@ -10,7 +10,7 @@ import {
 
 @tagsAll(['Category'])
 export default class CategoryController {
-    @request('post', '/category/create')
+    @request('post', '/category')
     @summary('creates a category')
     @body(createCategorySchema)
     static async createCategory(
@@ -28,13 +28,13 @@ export default class CategoryController {
         ctx.response.message = 'Category Created Successfully';
         ctx.response.status = 201;
     }
-    @request('get', '/category/getAll')
+    @request('get', '/categories/{board_id}')
     @summary('returns a specific user categories')
     @body(getAllCategorySchema)
     static async getCategories(
         ctx: ParameterizedContext<DefaultState, DefaultContext>
     ): Promise<void> {
-        const payload: any = ctx.request.body;
+        const payload: any = ctx.params.board_id;
         const categories = await services.category.getAll(payload.board_id, ctx);
 
         ctx.body = categories;
@@ -51,7 +51,7 @@ export default class CategoryController {
         ctx.body = category;
         ctx.response.status = 200;
     }
-    @request('put', '/category/update/{id}')
+    @request('put', '/category/{id}')
     @path(categorySchemaId)
     @body(updateCategorySchema)
     @summary('returns a category')
@@ -68,7 +68,7 @@ export default class CategoryController {
         ctx.body = category;
         ctx.response.status = 200;
     }
-    @request('delete', '/category/delete/{id}')
+    @request('delete', '/category/{id}')
     @path(categorySchemaId)
     @summary('returns an operation')
     static async deleteCategory(

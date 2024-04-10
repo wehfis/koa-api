@@ -11,7 +11,7 @@ import { ITaskBoardDto } from '../dtos/TaskDtos';
 
 @tagsAll(['Task'])
 export default class TaskController {
-    @request('post', '/task/create')
+    @request('post', '/task')
     @summary('creates a task')
     @body(createTaskSchema)
     static async createTask(
@@ -28,13 +28,13 @@ export default class TaskController {
         ctx.response.message = 'Task Created Successfully';
         ctx.response.status = 201;
     }
-    @request('get', '/task/getAll')
+    @request('get', '/tasks/{board_id}')
     @summary('returns a specific board tasks')
-    @body(getAllTaskSchema)
+    @path(getAllTaskSchema)
     static async getTasks(
         ctx: ParameterizedContext<DefaultState, DefaultContext>
     ): Promise<void> {
-        const payload: any = ctx.request.body;
+        const payload: any = ctx.params.board_id;
         const tasks = await services.task.getAll(payload.board_id, ctx);
 
         ctx.body = tasks;
@@ -51,7 +51,7 @@ export default class TaskController {
         ctx.body = category;
         ctx.response.status = 200;
     }
-    @request('put', '/task/update/{id}')
+    @request('put', '/task/{id}')
     @path(taskSchemaId)
     @body(updateTaskSchema)
     @summary('returns a task')
