@@ -1,8 +1,6 @@
 import {
     IsNotEmpty,
     IsString,
-    IsEmail,
-    IsOptional,
 	Length,
 } from 'class-validator';
 
@@ -10,6 +8,7 @@ export interface IUserModel {
     id: string;
     username: string;
     password: string;
+    refreshToken: string;
 }
 
 export class UserModel implements IUserModel {
@@ -26,9 +25,13 @@ export class UserModel implements IUserModel {
 	@Length(10, 100)
     password: string;
 
+    @IsString()
+    refreshToken: string;
+
     constructor(payload: IUserModel) {
         this.id = payload.id;
         this.username = payload.username;
         this.password = payload.password;
+        this.refreshToken = payload.refreshToken;
     }
 }

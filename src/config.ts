@@ -1,7 +1,8 @@
 import 'dotenv/config';
 
 const port: string | number = process.env.PORT || 3000;
-const jwtSecretKey: string | undefined = process.env.JWT_SECRET_KEY;
+const jwtSecretAccessKey: string | undefined = process.env.JWT_SECRET_ACCESS_KEY;
+const jwtSecretRefreshKey: string | undefined = process.env.JWT_SECRET_REFRESH_KEY;
 const jwtExpiresAccess: string | undefined = process.env.JWT_EXPIRES_ACCESS;
 const jwtExpiresRefresh: string | undefined = process.env.JWT_EXPIRES_REFRESH;
 const dbUser: string | undefined = process.env.DB_USER;
@@ -12,7 +13,8 @@ const dbPort: number | undefined = +process.env.DB_PORT!;
 
 const common = {
     port,
-    jwtSecretKey,
+    jwtSecretAccessKey,
+    jwtSecretRefreshKey,
     jwtExpiresAccess,
     jwtExpiresRefresh,
     dbUser,
