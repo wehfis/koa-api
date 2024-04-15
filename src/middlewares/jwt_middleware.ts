@@ -12,11 +12,11 @@ export default () =>
             return ctx.throw(401, 'Access denied');
         }
         try {
-            const decoded: any = jwt.verify(token, common.jwtSecretKey!);
-            console.log('jwt', decoded);
+            const decoded: any = jwt.verify(token, common.jwtSecretAccessKey!);
             ctx.state.userId = decoded.userId;
-            await next();
-        } catch (error) {
+        } catch (error: any) {
+            console.log(error.message);
             return ctx.throw(401, 'Invalid token');
         }
+        await next();
     };
