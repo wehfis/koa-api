@@ -16,6 +16,12 @@ export default class CategoryRepository
         };
         const result = await db.query(query);
 
+        if (result.rows.length < 1) {
+            const notFoundError = new Error(`Category with id '${id}' not found`);
+            notFoundError.name = 'Not Found';
+            throw notFoundError;
+        }
+
         const category: BoardCategoryModel = result.rows[0];
 
         return category;
@@ -62,6 +68,12 @@ export default class CategoryRepository
         };
         const result = await db.query(query);
 
+        if (result.rows.length < 1) {
+            const notFoundError = new Error(`Category with id '${id}' not found`);
+            notFoundError.name = 'Not Found';
+            throw notFoundError;
+        }
+
         const updatedBoard: BoardCategoryModel = result.rows[0];
 
         return updatedBoard;
@@ -76,8 +88,12 @@ export default class CategoryRepository
         };
         const result = await db.query(query);
 
-        const isDeleted: boolean = result.rows.length > 1 ? false : true;
+        if (result.rows.length !== 0) {
+            const notFoundError = new Error(`Category with id '${id}' not found`);
+            notFoundError.name = 'Not Found';
+            throw notFoundError;
+        }
 
-        return isDeleted;
+        return true;
     }
 }

@@ -3,8 +3,6 @@ import { LoginUserDto, RegisterUserDto } from '../dtos/UserDtos';
 import UserRepository from '../repositories/UserRepository';
 import { ParameterizedContext, DefaultState, DefaultContext } from 'koa';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-import common from '../config';
 import { IToken, TokenService } from './TokenService';
 
 export class UserService {
