@@ -100,7 +100,7 @@ export default class BoardRepository implements IBoardRepository<BoardModel> {
         };
         const result = await db.query(query);
         
-        if (result.rows.length < 1) {
+        if (result.rows.length !== 0) {
             const notFoundError = new Error(`Board with id '${id}' not found`);
             notFoundError.name = 'Not Found';
             throw notFoundError;

@@ -16,7 +16,6 @@ export default class BoardController {
         ctx: ParameterizedContext<DefaultState, DefaultContext>
     ): Promise<void> {
         const payload: any = ctx.request.body;
-
         const board = await services.board.create(
             ctx.state.userId,
             payload.title,
